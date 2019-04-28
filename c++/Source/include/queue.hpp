@@ -153,7 +153,7 @@ class Queue {
          */
         virtual bool Enqueue(void *item, TickType_t Timeout);
 
-        /**
+    virtual /**
          *  Remove an item from the front of the queue.
          *
          *  @param item Where the item you are removing will be returned to.
@@ -163,7 +163,7 @@ class Queue {
          */
         bool Dequeue(void *item, TickType_t Timeout = portMAX_DELAY);
 
-        /**
+    virtual /**
          *  Make a copy of an item from the front of the queue. This will
          *  not remove it from the head of the queue.
          *
@@ -184,7 +184,7 @@ class Queue {
          */
         virtual bool EnqueueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken);
 
-        /**
+    virtual /**
          *  Remove an item from the front of the queue in ISR context.
          *
          *  @param item Where the item you are removing will be returned to.
@@ -194,7 +194,7 @@ class Queue {
          */
         bool DequeueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken);
 
-        /**
+    virtual /**
          *  Make a copy of an item from the front of the queue. This will
          *  not remove it from the head of the queue.
          *

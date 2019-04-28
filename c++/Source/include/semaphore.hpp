@@ -40,6 +40,8 @@
 #ifndef SEMAPHORE_HPP_
 #define SEMAPHORE_HPP_
 
+#include "core/utils/IsrUtils.h"
+
 /**
  *  C++ exceptions are used by default when constructors fail.
  *  If you do not want this behavior, define the following in your makefile
@@ -152,7 +154,7 @@ class Semaphore {
          *         rescheduling event.
          *  @return true if the Semaphore was acquired, false if it timed out.
          */
-        bool TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken);
+        bool TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken  = NULL);
 
         /**
          *  Release (give) a semaphore from ISR context.
@@ -161,7 +163,26 @@ class Semaphore {
          *         rescheduling event.
          *  @return true if the Semaphore was released, false if it failed.
          */
-        bool GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken);
+        bool GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken = NULL);
+
+
+        /**
+         * Получить элемент семафора из произвольного контекста
+         **/
+        inline bool TakeA(TickType_t Timeout = portMAX_DELAY, BaseType_t *pxHigherPriorityTaskWoken = NULL){
+                if(core::utils::IsrUtils::isInterrupt())
+                        return TakeFromISR(pxHigherPriorityTaskWoken);
+                else
+                        return Take(Timeout);
+        }
+
+        /**Отдать элемент семаформа из произвольного контекста**/
+        inline bool GiveA(BaseType_t *pxHigherPriorityTaskWoken = NULL){
+                if(core::utils::IsrUtils::isInterrupt())
+                        return GiveFromISR(pxHigherPriorityTaskWoken);
+                else
+                        return Give();
+        }
 
         /**
          *  Our destructor

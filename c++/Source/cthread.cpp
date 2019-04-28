@@ -39,12 +39,11 @@
 
 #include <cstring>
 #include "thread.hpp"
+#include "cmsis_os.h"
 
 
 using namespace cpp_freertos;
 
-
-volatile bool Thread::SchedulerActive = false;
 MutexStandard Thread::StartGuardLock;
 
 
@@ -129,7 +128,7 @@ bool Thread::Start()
     //  Leaving scope, including the return, will automatically 
     //  unlock it.
     //
-    if (SchedulerActive) {
+    if (isSchedulerStarted()) {
 
         LockGuard guard (StartGuardLock);
 
@@ -167,7 +166,7 @@ bool Thread::Start()
                                 &handle);
 #endif
 
-    return rc != pdPASS ? false : true;
+    return  this->handle != NULL;
 }
 
 

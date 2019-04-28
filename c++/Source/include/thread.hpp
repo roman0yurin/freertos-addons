@@ -153,33 +153,6 @@ class Thread {
             taskYIELD();
         }
 
-        /**
-         *  Start the scheduler.
-         *
-         *  @note You need to use this call. Do NOT directly call 
-         *  vTaskStartScheduler while using this library.
-         */
-        static inline void StartScheduler()
-        {
-            SchedulerActive = true;
-            vTaskStartScheduler();
-        }
-
-        /**
-         *  End the scheduler.
-         *
-         *  @note Please see the FreeRTOS documentation regarding constraints
-         *  with the implementation of this.
-         *
-         *  @note You need to use this call. Do NOT directly call 
-         *  vTaskEndScheduler while using this library.
-         */
-        static inline void EndScheduler()
-        {
-            vTaskEndScheduler();
-            SchedulerActive = false;
-        }
-
 #if (INCLUDE_vTaskSuspend == 1)
         /**
          *  Suspend this thread.
@@ -263,6 +236,11 @@ class Thread {
             return pcTaskGetName(handle);
         }
 #endif
+
+    /**Запущено ли в данный момент выполнение задач FreeRTOS**/
+    bool isSchedulerStarted(){
+      xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED;
+    }
 
     /////////////////////////////////////////////////////////////////////////
     //
@@ -372,11 +350,6 @@ class Thread {
          *  Can be obtained from GetHandle().
          */
         TaskHandle_t handle;
-
-        /**
-         *  We need to track whether the scheduler is active or not.
-         */
-        static volatile bool SchedulerActive;
 
         /**
          *  The name of this thread.

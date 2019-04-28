@@ -55,7 +55,7 @@
 #endif
 #include "FreeRTOS.h"
 #include "event_groups.h"
-
+#include "core/utils/IsrUtils.h"
 
 namespace cpp_freertos {
 
@@ -230,6 +230,17 @@ class EventGroup {
         BaseType_t ClearBitsFromISR(const EventBits_t uxBitsToClear);
 
         /**
+         * Очистить биты событийной группы из произвольного контекста
+         **/
+        BaseType_t ClearBitsA(const EventBits_t uxBitsToClear){
+                if(core::utils::IsrUtils::isInterrupt()){
+                        ClearBitsFromISR(uxBitsToClear);
+                }else{
+                        ClearBits(uxBitsToClear);
+                }
+        }
+
+        /**
         *  Returns the current value of the event bits (event flags) in an
         *  event group.
         *
@@ -246,6 +257,17 @@ class EventGroup {
          *  time EventGroup::GetBitsFromISR was called.
          */
         EventBits_t GetBitsFromISR();
+
+        /**
+         * Получить флаги событийной группы из произвольного контекста
+         **/
+        EventBits_t GetBitsA(){
+                if(core::utils::IsrUtils::isInterrupt()){
+                        return GetBitsFromISR();
+                }else{
+                        return GetBits();
+                }
+        }
 
         /**
          *  Set bits (flags) within an event group.
@@ -280,6 +302,17 @@ class EventGroup {
          */
         BaseType_t SetBitsFromISR(  const EventBits_t uxBitsToSet,
                                     BaseType_t *pxHigherPriorityTaskWoken);
+
+
+        /**Установка флагов событийной группы из произвольного контекста**/
+        BaseType_t SetBitsA(const EventBits_t uxBitsToSet,
+                            BaseType_t *pxHigherPriorityTaskWoken = NULL){
+                if(core::utils::IsrUtils::isInterrupt()){
+                        return SetBitsFromISR(uxBitsToSet, pxHigherPriorityTaskWoken);
+                }else{
+                        return SetBits(uxBitsToSet);
+                }
+        }
 
         #endif
 
