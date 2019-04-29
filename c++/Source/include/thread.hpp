@@ -239,7 +239,7 @@ class Thread {
 
     /**Запущено ли в данный момент выполнение задач FreeRTOS**/
     bool isSchedulerStarted(){
-      xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED;
+      return xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED;
     }
 
     /////////////////////////////////////////////////////////////////////////

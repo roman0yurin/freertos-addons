@@ -234,9 +234,9 @@ class EventGroup {
          **/
         BaseType_t ClearBitsA(const EventBits_t uxBitsToClear){
                 if(core::utils::IsrUtils::isInterrupt()){
-                        ClearBitsFromISR(uxBitsToClear);
+									return ClearBitsFromISR(uxBitsToClear);
                 }else{
-                        ClearBits(uxBitsToClear);
+                	return ClearBits(uxBitsToClear);
                 }
         }
 
