@@ -215,8 +215,10 @@ class Thread {
          */
         inline void SetPriority(UBaseType_t NewPriority)
         {
-            Priority = NewPriority;
-            vTaskPrioritySet(GetHandle(), NewPriority);
+        	if(Priority != NewPriority) {
+						Priority = NewPriority;
+						vTaskPrioritySet(GetHandle(), NewPriority);
+					}
         }
 #endif
 
