@@ -71,7 +71,8 @@ Thread::Thread( uint16_t usStackDepth,
     :   Name("Default"), 
         StackDepth(usStackDepth), 
         Priority(uxPriority),
-        ThreadStarted(false)
+        ThreadStarted(false),
+        handle(NULL)
 {
 #if (INCLUDE_vTaskDelayUntil == 1)
     delayUntilInitialized = false;
@@ -182,7 +183,8 @@ void Thread::Cleanup()
 
 Thread::~Thread()
 {
-    vTaskDelete(handle);
+		if(handle != NULL)
+    	vTaskDelete(handle);
     handle = (TaskHandle_t)-1;
 }
 
