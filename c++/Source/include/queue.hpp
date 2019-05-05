@@ -141,7 +141,7 @@ class Queue {
          *  @param item The item you are adding.
          *  @return true if the item was added, false if it was not.
          */
-        virtual bool Enqueue(void *item);
+        virtual bool Enqueue(const void *item);
 
         /**
          *  Add an item to the back of the queue.
@@ -182,7 +182,7 @@ class Queue {
          *         rescheduling event.
          *  @return true if the item was added, false if it was not.
          */
-        virtual bool EnqueueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken);
+        virtual bool EnqueueFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken);
 
     virtual /**
          *  Remove an item from the front of the queue in ISR context.
@@ -285,7 +285,7 @@ class Deque : public Queue {
          *         the queue is currently full.
          *  @return true if the item was added, false if it was not.
          */
-        bool EnqueueToFront(void *item, TickType_t Timeout = portMAX_DELAY);
+        bool EnqueueToFront(const void *item, TickType_t Timeout = portMAX_DELAY);
 
         /**
          *  Add an item to the front of the queue. This will result in
@@ -297,7 +297,7 @@ class Deque : public Queue {
          *         rescheduling event.
          *  @return true if the item was added, false if it was not.
          */
-        bool EnqueueToFrontFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken);
+        bool EnqueueToFrontFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken);
 };
 
 
@@ -333,7 +333,7 @@ class BinaryQueue : public Queue {
           *  @param item The item you are adding.
           *  @return true always, because of overwrite.
           */
-        virtual bool Enqueue(void *item);
+        virtual bool Enqueue(const void *item);
 
          /**
           *  Add an item to the queue in ISR context.

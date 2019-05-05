@@ -68,11 +68,11 @@ Thread::Thread( const std::string pcName,
 
 Thread::Thread( uint16_t usStackDepth,
                 UBaseType_t uxPriority)
-    :   Name("Default"), 
+    :   handle(NULL),
+    		Name("Default"),
         StackDepth(usStackDepth), 
         Priority(uxPriority),
-        ThreadStarted(false),
-        handle(NULL)
+				ThreadStarted(false)
 {
 #if (INCLUDE_vTaskDelayUntil == 1)
     delayUntilInitialized = false;
@@ -151,7 +151,7 @@ bool Thread::Start()
 
 #ifndef CPP_FREERTOS_NO_CPP_STRINGS
 
-    BaseType_t rc = xTaskCreate(TaskFunctionAdapter,
+    xTaskCreate(TaskFunctionAdapter,
                                 Name.c_str(),
                                 StackDepth,
                                 this,

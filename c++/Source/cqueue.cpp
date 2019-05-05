@@ -63,7 +63,7 @@ Queue::~Queue()
 }
 
 
-bool Queue::Enqueue(void *item)
+bool Queue::Enqueue(const void *item)
 {
     BaseType_t success;
 
@@ -103,7 +103,7 @@ bool Queue::Peek(void *item, TickType_t Timeout)
 }
 
 
-bool Queue::EnqueueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken)
+bool Queue::EnqueueFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken)
 {
     BaseType_t success;
 
@@ -173,7 +173,7 @@ Deque::Deque(UBaseType_t maxItems, UBaseType_t itemSize)
 }
 
 
-bool Deque::EnqueueToFront(void *item, TickType_t Timeout)
+bool Deque::EnqueueToFront(const void *item, TickType_t Timeout)
 {
     BaseType_t success;
 
@@ -183,7 +183,7 @@ bool Deque::EnqueueToFront(void *item, TickType_t Timeout)
 }
 
 
-bool Deque::EnqueueToFrontFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken)
+bool Deque::EnqueueToFrontFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken)
 {
     BaseType_t success;
 
@@ -199,7 +199,7 @@ BinaryQueue::BinaryQueue(UBaseType_t itemSize)
 }
 
 
-bool BinaryQueue::Enqueue(void *item)
+bool BinaryQueue::Enqueue(const void *item)
 {
     (void)xQueueOverwrite(handle, item);
     return true;
