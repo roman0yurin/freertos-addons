@@ -73,7 +73,7 @@ bool Queue::Enqueue(const void *item)
 }
 
 
-bool Queue::Enqueue(void *item, TickType_t Timeout)
+bool Queue::Enqueue(const void *item, TickType_t Timeout)
 {
     BaseType_t success;
 

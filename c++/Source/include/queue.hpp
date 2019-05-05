@@ -151,7 +151,7 @@ class Queue {
          *         the queue is currently full.
          *  @return true if the item was added, false if it was not.
          */
-        virtual bool Enqueue(void *item, TickType_t Timeout);
+        virtual bool Enqueue(const void *item, TickType_t Timeout);
 
     virtual /**
          *  Remove an item from the front of the queue.
