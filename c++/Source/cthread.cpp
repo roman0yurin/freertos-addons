@@ -79,6 +79,12 @@ Thread::Thread( uint16_t usStackDepth,
 #endif
 }
 
+Thread::Thread(Thread &&move) noexcept : handle(move.handle), Name(move.Name), StackDepth(move.StackDepth), Priority(move.Priority), ThreadStarted(move.ThreadStarted){
+    move.handle = NULL;
+    move.ThreadStarted = false;
+
+};
+
 //
 //  We do not want to use C++ strings. Fall back to character arrays.
 //
@@ -149,14 +155,15 @@ bool Thread::Start()
             ThreadStarted = true;
     }
 
+    TaskFunction_t fPtr = TaskFunctionAdapter;
 #ifndef CPP_FREERTOS_NO_CPP_STRINGS
 
-    xTaskCreate(TaskFunctionAdapter,
-                                Name.c_str(),
-                                StackDepth,
-                                this,
-                                Priority,
-                                &handle);
+    xTaskCreate(fPtr,
+                Name.c_str(),
+                StackDepth,
+                this,
+                Priority,
+                &handle);
 #else 
 
     BaseType_t rc = xTaskCreate(TaskFunctionAdapter,

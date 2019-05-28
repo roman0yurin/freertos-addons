@@ -58,8 +58,11 @@
 #include "mutex.hpp"
 #include "semaphore.hpp"
 #include "condition_variable.hpp"
+#include <unordered_map>
+#include "core/utils/Datum.h"
 
 namespace cpp_freertos {
+    using namespace core::utils;
 
 
 /**
@@ -109,6 +112,13 @@ class Thread {
          */
         Thread( uint16_t StackDepth,
                 UBaseType_t Priority);
+
+        Thread(Thread &&move) noexcept ;
+
+
+        Thread(const Thread& copy) = delete;
+
+        Thread &operator=(const Thread &copy) = delete;
 
         /**
          *  Starts a thread.
@@ -244,6 +254,22 @@ class Thread {
       return xTaskGetSchedulerState() == taskSCHEDULER_NOT_STARTED;
     }
 
+
+    /**Поточно-локальные переменные, размещены в памяти потока, поток отвечает за их освобождение**/
+    std::unordered_map<uint32_t, Datum> local;
+
+    /**Приостановить действие потока на указанный промежуток времени**/
+    inline static void sleep(size_t timeMS){
+        vTaskDelay(pdMS_TO_TICKS(timeMS));
+    }
+
+    /**Поток, работающий в данный момент**/
+    inline static Thread *getCurrentThread(){
+        TaskHandle_t task = xTaskGetCurrentTaskHandle();
+        TaskFunction_t fPtr = TaskFunctionAdapter;
+        return task != NULL && getTaskFunction(task) == fPtr ? reinterpret_cast<Thread *>(getTaskPvParameter(task)) : NULL;
+    }
+
     /////////////////////////////////////////////////////////////////////////
     //
     //  Protected API
@@ -254,6 +280,7 @@ class Thread {
     //
     /////////////////////////////////////////////////////////////////////////
     protected:
+
         /**
          *  Implementation of your actual thread code.
          *  You must override this function.
@@ -428,7 +455,6 @@ class Thread {
     friend class ConditionVariable;
 
 #endif
-
 };
 
 
