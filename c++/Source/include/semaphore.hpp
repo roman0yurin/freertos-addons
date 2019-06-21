@@ -185,6 +185,11 @@ class Semaphore {
         }
 
         /**
+         * Сколько элементов семафора еще доступно в данный момент
+         **/
+        uint16_t getAvailable();
+
+        /**
          *  Our destructor
          */
         virtual ~Semaphore();

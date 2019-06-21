@@ -94,6 +94,11 @@ Semaphore::~Semaphore()
 }
 
 
+uint16_t Semaphore::getAvailable() {
+	return uxSemaphoreGetCount(handle);
+}
+
+
 BinarySemaphore::BinarySemaphore(bool set)
 {
     handle = xSemaphoreCreateBinary();
