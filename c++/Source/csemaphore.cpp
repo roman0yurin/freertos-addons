@@ -95,7 +95,10 @@ Semaphore::~Semaphore()
 
 
 uint16_t Semaphore::getAvailable() {
-	return uxSemaphoreGetCount(handle);
+    if(core::utils::IsrUtils::isInterrupt())
+        return uxQueueMessagesWaitingFromISR( ( QueueHandle_t ) ( handle ) );
+    else
+	    return uxSemaphoreGetCount(handle);
 }
 
 
