@@ -154,7 +154,7 @@ class Semaphore {
          *         rescheduling event.
          *  @return true if the Semaphore was acquired, false if it timed out.
          */
-        bool TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken  = NULL);
+        bool TakeFromISR();
 
         /**
          *  Release (give) a semaphore from ISR context.
@@ -163,23 +163,23 @@ class Semaphore {
          *         rescheduling event.
          *  @return true if the Semaphore was released, false if it failed.
          */
-        bool GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken = NULL);
+        bool GiveFromISR();
 
 
         /**
          * Получить элемент семафора из произвольного контекста
          **/
-        inline bool TakeA(TickType_t Timeout = portMAX_DELAY, BaseType_t *pxHigherPriorityTaskWoken = NULL){
+        inline bool TakeA(TickType_t Timeout = portMAX_DELAY){
                 if(core::utils::IsrUtils::isInterrupt())
-                        return TakeFromISR(pxHigherPriorityTaskWoken);
+                        return TakeFromISR();
                 else
                         return Take(Timeout);
         }
 
         /**Отдать элемент семаформа из произвольного контекста**/
-        inline bool GiveA(BaseType_t *pxHigherPriorityTaskWoken = NULL){
+        inline bool GiveA(){
                 if(core::utils::IsrUtils::isInterrupt())
-                        return GiveFromISR(pxHigherPriorityTaskWoken);
+                        return GiveFromISR();
                 else
                         return Give();
         }

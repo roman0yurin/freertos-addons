@@ -38,6 +38,7 @@
 
 
 #include "semaphore.hpp"
+#include "IsrContext.h"
 
 
 using namespace cpp_freertos;
@@ -53,11 +54,11 @@ bool Semaphore::Take(TickType_t xBlockTime)
 }
 
 
-bool Semaphore::TakeFromISR(BaseType_t *pxHigherPriorityTaskWoken)
+bool Semaphore::TakeFromISR()
 {
     BaseType_t success;
 
-    success = xSemaphoreTakeFromISR(handle, pxHigherPriorityTaskWoken);
+    success = xSemaphoreTakeFromISR(handle, getPxHigherPriorityTaskWoken());
 
     return success == pdTRUE ? true : false;
 }
@@ -73,11 +74,11 @@ bool Semaphore::Give()
 }
 
 
-bool Semaphore::GiveFromISR(BaseType_t *pxHigherPriorityTaskWoken)
+bool Semaphore::GiveFromISR()
 {
     BaseType_t success;
 
-    success = xSemaphoreGiveFromISR(handle, pxHigherPriorityTaskWoken);
+    success = xSemaphoreGiveFromISR(handle, getPxHigherPriorityTaskWoken());
 
     return success == pdTRUE ? true : false;
 }

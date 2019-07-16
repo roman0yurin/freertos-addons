@@ -182,7 +182,7 @@ class Queue {
          *         rescheduling event.
          *  @return true if the item was added, false if it was not.
          */
-        virtual bool EnqueueFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken);
+        virtual bool EnqueueFromISR(const void *item);
 
     virtual /**
          *  Remove an item from the front of the queue in ISR context.
@@ -192,7 +192,7 @@ class Queue {
          *         rescheduling event.
          *  @return true if an item was removed, false if no item was removed.
          */
-        bool DequeueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken);
+        bool DequeueFromISR(void *item);
 
     virtual /**
          *  Make a copy of an item from the front of the queue. This will
@@ -297,7 +297,7 @@ class Deque : public Queue {
          *         rescheduling event.
          *  @return true if the item was added, false if it was not.
          */
-        bool EnqueueToFrontFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken);
+        bool EnqueueToFrontFromISR(const void *item);
 };
 
 

@@ -38,6 +38,7 @@
 
 
 #include "queue.hpp"
+#include "IsrContext.h"
 
 
 using namespace cpp_freertos;
@@ -45,21 +46,26 @@ using namespace cpp_freertos;
 
 Queue::Queue(UBaseType_t maxItems, UBaseType_t itemSize)
 {
-    handle = xQueueCreate(maxItems, itemSize);
+    if(maxItems > 0) {
+        handle = xQueueCreate(maxItems, itemSize);
 
-    if (handle == NULL) {
+        if (handle == NULL) {
 #ifndef CPP_FREERTOS_NO_EXCEPTIONS
-        throw QueueCreateException();
+            throw QueueCreateException();
 #else
-        configASSERT(!"Queue Constructor Failed");
+            configASSERT(!"Queue Constructor Failed");
 #endif
+        }
+    }else{
+        handle = NULL;
     }
 }
 
 
 Queue::~Queue()
 {
-    vQueueDelete(handle);
+    if(handle != NULL)
+        vQueueDelete(handle);
 }
 
 
@@ -102,22 +108,24 @@ bool Queue::Peek(void *item, TickType_t Timeout)
     return success == pdTRUE ? true : false;
 }
 
+extern "C" {
+void printDelay();
+}
 
-bool Queue::EnqueueFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken)
+bool Queue::EnqueueFromISR(const void *item)
 {
     BaseType_t success;
-
-    success = xQueueSendToBackFromISR(handle, item, pxHigherPriorityTaskWoken);
+    success = xQueueSendToBackFromISR(handle, item, getPxHigherPriorityTaskWoken());
 
     return success == pdTRUE ? true : false;
 }
 
 
-bool Queue::DequeueFromISR(void *item, BaseType_t *pxHigherPriorityTaskWoken)
+bool Queue::DequeueFromISR(void *item)
 {
     BaseType_t success;
 
-    success = xQueueReceiveFromISR(handle, item, pxHigherPriorityTaskWoken);
+    success = xQueueReceiveFromISR(handle, item, getPxHigherPriorityTaskWoken());
 
     return success == pdTRUE ? true : false;
 }
@@ -183,11 +191,11 @@ bool Deque::EnqueueToFront(const void *item, TickType_t Timeout)
 }
 
 
-bool Deque::EnqueueToFrontFromISR(const void *item, BaseType_t *pxHigherPriorityTaskWoken)
+bool Deque::EnqueueToFrontFromISR(const void *item)
 {
     BaseType_t success;
 
-    success = xQueueSendToFrontFromISR(handle, item, pxHigherPriorityTaskWoken);
+    success = xQueueSendToFrontFromISR(handle, item, getPxHigherPriorityTaskWoken());
 
     return success == pdTRUE ? true : false;
 }
